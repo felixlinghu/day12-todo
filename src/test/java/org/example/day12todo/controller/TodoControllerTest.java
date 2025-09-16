@@ -59,7 +59,6 @@ class TodoControllerTest {
   @Test
   void should_return_422_error_when_create_invalid_todo() throws Exception {
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getErrorTodo())).andExpect(status().isUnprocessableEntity());
-
   }
 
   @Test
@@ -67,13 +66,28 @@ class TodoControllerTest {
     String todo =
         """
             {
+            "id":"1234567",
             "text":"Buy m11k",
             "done":false
             }
             """;
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").exists());
+        .andExpect(jsonPath("$.id").value("1234567"));
   }
+
+  @Test
+  void should_return_422_error_when_text_is_null() throws Exception {
+    String todo =
+        """
+            {
+            
+            "done":false
+            }
+            """;
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isUnprocessableEntity())
+    ;
+  }
+
 
   private static String getTodo() {
     return """

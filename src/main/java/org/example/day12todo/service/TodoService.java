@@ -18,7 +18,7 @@ public class TodoService {
   }
 
   public Todo create(Todo todo) throws InvalidContextException {
-    if (todo.getText().trim().isEmpty()) {
+    if (todo.getText() == null || todo.getText().trim().isEmpty()) {
       throw new InvalidContextException("Todo text cannot be empty");
     }
     return todoRepository.save(todo);
