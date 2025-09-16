@@ -1,6 +1,7 @@
 package org.example.day12todo.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,26 +24,44 @@ class TodoControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private TodoRepository todoRepository;
-@BeforeEach
-public void setUp() {
-  todoRepository.deleteAll();
-}
+
+  @BeforeEach
+  public void setUp() {
+    todoRepository.deleteAll();
+  }
+
   @Test
   void should_return_empty_response_when_index_with_no_any_todo() throws Exception {
     MockHttpServletRequestBuilder requestBuilder = get("/todos").contentType(MediaType.APPLICATION_JSON);
     mockMvc.perform(requestBuilder).andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(0));
   }
+
   @Test
   void should_return_one_response_when_index_is_valid() throws Exception {
-    Todo todo=new Todo(null,"Buy m11k",false);
-    todoRepository.save(todo);
-
+//    Todo todo=new Todo(null,"Buy m11k",false);
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getTodo()));
     MockHttpServletRequestBuilder requestBuilder = get("/todos").contentType(MediaType.APPLICATION_JSON);
     mockMvc.perform(requestBuilder).andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(1))
         .andExpect(jsonPath("$[0].id").exists())
         .andExpect(jsonPath("$[0].text").value("Buy m11k"))
         .andExpect(jsonPath("$[0].done").value(false));
+  }
+
+
+  @Test
+  void should_return_one_todo_when_create_one_todo() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getTodo())).andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").exists());
+  }
+
+  private static String getTodo() {
+    return """
+        {
+        "text":"Buy m11k",
+        "done":false
+        }
+        """;
   }
 }
