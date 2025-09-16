@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.day12todo.entity.Todo;
 import org.example.day12todo.exception.InvalidContextException;
+import org.example.day12todo.exception.InvalidIdException;
 import org.example.day12todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,14 @@ public class TodoService {
       throw new InvalidContextException("Todo text cannot be empty");
     }
     return todoRepository.save(todo);
+  }
+
+  public Todo update(String id, Todo updateTodo) throws InvalidIdException {
+    Todo todo = todoRepository.findById(id).orElse(null);
+    if (todo == null) {
+      throw new InvalidIdException("ID is invalid");
+    }
+    updateTodo.setId(id);
+    return todoRepository.save(updateTodo);
   }
 }

@@ -13,4 +13,10 @@ public class GlobalExceptionHandler {
   public InvalidContextException handleInvalidContextException(InvalidContextException e) {
     return new InvalidContextException(e.getMessage());
   }
+
+  @ExceptionHandler(InvalidIdException.class)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public InvalidIdException handleInvalidContextException(InvalidIdException e) {
+    return new InvalidIdException(e.getMessage());
+  }
 }

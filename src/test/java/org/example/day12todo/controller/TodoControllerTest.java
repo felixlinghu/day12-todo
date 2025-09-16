@@ -2,6 +2,7 @@ package org.example.day12todo.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,17 +64,10 @@ class TodoControllerTest {
 
   @Test
   void should_return_one_todo_with_id_when_create_one_todo_with_id() throws Exception {
-    String todo =
-        """
-            {
-            "id":"1234567",
-            "text":"Buy m11k",
-            "done":false
-            }
-            """;
-    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId())).andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value("1234567"));
   }
+
 
   @Test
   void should_return_422_error_when_text_is_null() throws Exception {
@@ -86,6 +80,29 @@ class TodoControllerTest {
             """;
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isUnprocessableEntity())
     ;
+  }
+
+  //todo
+  @Test
+  void should_return_one_todo_with_id_when_create_one_todo_with_error_id() throws Exception {
+    String todo =
+        """
+            {
+            "id":"client-sent",
+            "text":"Buy m11k",
+            "done":false
+            }
+            """;
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value("client-sent"));
+  }
+
+  @Test
+  void should_update_one_todo_when_update_one_todo() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+
+    mockMvc.perform(put("/todos/1234567").contentType(MediaType.APPLICATION_JSON).content(getTodo())).andExpect(status().isOk())
+        .andExpect(jsonPath("$.done").value(false));
   }
 
 
@@ -106,4 +123,15 @@ class TodoControllerTest {
         }
         """;
   }
+
+  private static String getToDoWithId() {
+    return """
+        {
+        "id":"1234567",
+        "text":"Buy m11k",
+        "done":true
+        }
+        """;
+  }
+
 }
