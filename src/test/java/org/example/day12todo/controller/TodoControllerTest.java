@@ -3,6 +3,7 @@ package org.example.day12todo.controller;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -185,5 +186,15 @@ class TodoControllerTest {
     mockMvc.perform(delete("/todos/999")).andExpect(status().isNotFound());
     mockMvc.perform(get("/todos")).andExpect(jsonPath("$.length()").value(1));
   }
+
+  @Test
+  void should_allow_core() throws Exception {
+    MockHttpServletRequestBuilder request = options("/todos")
+        .header("Access-Control-Request-Method", "POST", "GET", "DELETE", "PUT")
+        .header("Origin", "http://localhost:3000");
+
+    mockMvc.perform(request).andExpect(status().isOk());
+  }
+
 
 }
