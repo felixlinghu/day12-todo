@@ -1,5 +1,6 @@
 package org.example.day12todo.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -78,6 +79,7 @@ class TodoControllerTest {
             "done":false
             }
             """;
+
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isUnprocessableEntity())
     ;
   }
@@ -93,6 +95,7 @@ class TodoControllerTest {
             "done":false
             }
             """;
+
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value("client-sent"));
   }
@@ -140,8 +143,14 @@ class TodoControllerTest {
             """;
 
     mockMvc.perform(put("/todos/1234567").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isUnprocessableEntity());
-
   }
+
+  @Test
+  void should_delete_one_todo_when_delete_one_todo() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+    mockMvc.perform(delete("/todos/1234567")).andExpect(status().isNoContent());
+  }
+
 
   private static String getTodo() {
     return """
