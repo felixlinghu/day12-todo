@@ -1,15 +1,11 @@
 package org.example.day12todo.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 @Entity
 //@Table
@@ -23,6 +19,15 @@ public class Todo {
   private String text;
   private boolean done;
 
+  public static boolean isInteger(String str) {
+    try {
+      Integer.parseInt(str);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
   @PrePersist
   public void ensureId() {
     if (this.id == null) {
@@ -30,15 +35,6 @@ public class Todo {
     }
     if (!isInteger(this.id)) {
       this.id = java.util.UUID.randomUUID().toString();
-    }
-  }
-
-  public static boolean isInteger(String str) {
-    try {
-      Integer.parseInt(str);
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
     }
   }
 }

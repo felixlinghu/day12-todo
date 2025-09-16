@@ -1,13 +1,13 @@
 package org.example.day12todo.controller;
 
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.not;
-import org.example.day12todo.entity.Todo;
+
 import org.example.day12todo.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +26,34 @@ class TodoControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private TodoRepository todoRepository;
+
+  private static String getTodo() {
+    return """
+        {
+        "text":"Buy m11k",
+        "done":false
+        }
+        """;
+  }
+
+  private static String getErrorTodo() {
+    return """
+        {
+        "text":"",
+        "done":false
+        }
+        """;
+  }
+
+  private static String getToDoWithId() {
+    return """
+        {
+        "id":"1234567",
+        "text":"Buy m11k",
+        "done":true
+        }
+        """;
+  }
 
   @BeforeEach
   public void setUp() {
@@ -50,7 +78,6 @@ class TodoControllerTest {
         .andExpect(jsonPath("$[0].done").value(false));
   }
 
-
   @Test
   void should_return_one_todo_when_create_one_todo() throws Exception {
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getTodo())).andExpect(status().isCreated())
@@ -67,7 +94,6 @@ class TodoControllerTest {
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId())).andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value("1234567"));
   }
-
 
   @Test
   void should_return_422_error_when_text_is_null() throws Exception {
@@ -158,36 +184,6 @@ class TodoControllerTest {
 
     mockMvc.perform(delete("/todos/999")).andExpect(status().isNotFound());
     mockMvc.perform(get("/todos")).andExpect(jsonPath("$.length()").value(1));
-  }
-
-
-
-  private static String getTodo() {
-    return """
-        {
-        "text":"Buy m11k",
-        "done":false
-        }
-        """;
-  }
-
-  private static String getErrorTodo() {
-    return """
-        {
-        "text":"",
-        "done":false
-        }
-        """;
-  }
-
-  private static String getToDoWithId() {
-    return """
-        {
-        "id":"1234567",
-        "text":"Buy m11k",
-        "done":true
-        }
-        """;
   }
 
 }
