@@ -148,8 +148,19 @@ class TodoControllerTest {
   @Test
   void should_delete_one_todo_when_delete_one_todo() throws Exception {
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+
     mockMvc.perform(delete("/todos/1234567")).andExpect(status().isNoContent());
+    mockMvc.perform(get("/todos")).andExpect(jsonPath("$.length()").value(0));
   }
+
+  @Test
+  void should_return_404_when_delete_with_non_existent_id() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+
+    mockMvc.perform(delete("/todos/999")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/todos")).andExpect(jsonPath("$.length()").value(1));
+  }
+
 
 
   private static String getTodo() {

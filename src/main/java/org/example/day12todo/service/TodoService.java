@@ -37,7 +37,11 @@ public class TodoService {
     return todoRepository.save(updateTodo);
   }
 
-  public void delete(String id) {
+  public void delete(String id) throws InvalidIdException {
+    Todo todo = todoRepository.findById(id).orElse(null);
+    if (todo == null) {
+      throw new InvalidIdException("ID is invalid");
+    }
     todoRepository.deleteById(id);
   }
 }
