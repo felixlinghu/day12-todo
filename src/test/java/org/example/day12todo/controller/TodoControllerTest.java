@@ -105,6 +105,23 @@ class TodoControllerTest {
         .andExpect(jsonPath("$.done").value(false));
   }
 
+  @Test
+  void should_update_one_todo_when_update_one_todo_with_incorrect_id() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+    String todo =
+        """
+            {
+            "id":"123",
+            "text":"Felix Linghu",
+            "done":false
+            }
+            """;
+
+    mockMvc.perform(put("/todos/1234567").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value("1234567"))
+        .andExpect(jsonPath("$.text").value("Felix Linghu"));
+  }
+
 
   private static String getTodo() {
     return """
