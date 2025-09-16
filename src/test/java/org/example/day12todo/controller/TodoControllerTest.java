@@ -62,6 +62,19 @@ class TodoControllerTest {
 
   }
 
+  @Test
+  void should_return_one_todo_with_id_when_create_one_todo_with_id() throws Exception {
+    String todo =
+        """
+            {
+            "text":"Buy m11k",
+            "done":false
+            }
+            """;
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").exists());
+  }
+
   private static String getTodo() {
     return """
         {
