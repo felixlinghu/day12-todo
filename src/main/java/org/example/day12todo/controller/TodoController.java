@@ -3,6 +3,7 @@ package org.example.day12todo.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.day12todo.entity.Todo;
+import org.example.day12todo.exception.InvalidContextException;
 import org.example.day12todo.repository.TodoRepository;
 import org.example.day12todo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class TodoController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Todo create(@RequestBody Todo todo) {
+  public Todo create(@RequestBody Todo todo) throws InvalidContextException {
     return todoService.create(todo);
   }
 }
