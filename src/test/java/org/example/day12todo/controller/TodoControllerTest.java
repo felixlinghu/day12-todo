@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.hamcrest.Matchers.not;
 import org.example.day12todo.entity.Todo;
 import org.example.day12todo.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,6 @@ class TodoControllerTest {
 
   @Test
   void should_return_one_response_when_index_is_valid() throws Exception {
-//    Todo todo=new Todo(null,"Buy m11k",false);
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getTodo()));
     MockHttpServletRequestBuilder requestBuilder = get("/todos").contentType(MediaType.APPLICATION_JSON);
     mockMvc.perform(requestBuilder).andExpect(status().isOk())
@@ -97,7 +96,7 @@ class TodoControllerTest {
             """;
 
     mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value("client-sent"));
+        .andExpect(jsonPath("$.id").value(not("client-sent")));
   }
 
   @Test
