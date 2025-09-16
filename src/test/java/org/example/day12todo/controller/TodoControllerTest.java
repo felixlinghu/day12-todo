@@ -122,6 +122,13 @@ class TodoControllerTest {
         .andExpect(jsonPath("$.text").value("Felix Linghu"));
   }
 
+  @Test
+  void should_return_404_when_update_with_non_existent_id() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+
+    mockMvc.perform(put("/todos/999").contentType(MediaType.APPLICATION_JSON).content(getTodo())).andExpect(status().isNotFound());
+
+  }
 
   private static String getTodo() {
     return """

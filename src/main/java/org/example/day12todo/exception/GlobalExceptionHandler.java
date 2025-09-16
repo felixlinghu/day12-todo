@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(InvalidIdException.class)
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public InvalidIdException handleInvalidContextException(InvalidIdException e) {
     return new InvalidIdException(e.getMessage());
   }
