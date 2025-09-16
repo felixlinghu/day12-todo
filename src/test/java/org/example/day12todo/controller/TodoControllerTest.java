@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.example.day12todo.entity.Todo;
 import org.example.day12todo.repository.TodoRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +23,10 @@ class TodoControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private TodoRepository todoRepository;
-
+@BeforeEach
+public void setUp() {
+  todoRepository.deleteAll();
+}
   @Test
   void should_return_empty_response_when_index_with_no_any_todo() throws Exception {
     MockHttpServletRequestBuilder requestBuilder = get("/todos").contentType(MediaType.APPLICATION_JSON);
