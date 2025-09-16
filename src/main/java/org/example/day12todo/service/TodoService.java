@@ -25,7 +25,10 @@ public class TodoService {
     return todoRepository.save(todo);
   }
 
-  public Todo update(String id, Todo updateTodo) throws InvalidIdException {
+  public Todo update(String id, Todo updateTodo) throws InvalidIdException, InvalidContextException {
+    if (updateTodo.getText() == null || updateTodo.getText().trim().isEmpty()) {
+      throw new InvalidContextException("text is invalid");
+    }
     Todo todo = todoRepository.findById(id).orElse(null);
     if (todo == null) {
       throw new InvalidIdException("ID is invalid");

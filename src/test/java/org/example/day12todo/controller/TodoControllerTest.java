@@ -130,6 +130,19 @@ class TodoControllerTest {
 
   }
 
+  @Test
+  void should_return_422_when_update_with_todo_is_empty() throws Exception {
+    mockMvc.perform(post("/todos").contentType(MediaType.APPLICATION_JSON).content(getToDoWithId()));
+    String todo =
+        """
+            {
+            }
+            """;
+
+    mockMvc.perform(put("/todos/1234567").contentType(MediaType.APPLICATION_JSON).content(todo)).andExpect(status().isUnprocessableEntity());
+
+  }
+
   private static String getTodo() {
     return """
         {
