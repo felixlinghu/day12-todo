@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Todo {
-@Id
+
+  @Id
   private Integer id;
 }
